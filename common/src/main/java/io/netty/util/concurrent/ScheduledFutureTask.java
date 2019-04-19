@@ -21,7 +21,15 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Delayed;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
+/**
+ 延迟执行任务的对象
+ 定义了
+ 1.首次任务执行的延迟时间
+ 2.每个任务执行的间隔时间
 
+ 这里并不存在真正的任务执行，只是操作任务，放到队列中，真正执行在executor中了
+  目前看是在{@link AbstractScheduledEventExecutor} 作为延迟任务队列使用了
+ */
 @SuppressWarnings("ComparableImplementedButEqualsNotOverridden")
 final class ScheduledFutureTask<V> extends PromiseTask<V> implements ScheduledFuture<V> {
     private static final AtomicLong nextTaskId = new AtomicLong();
@@ -36,9 +44,9 @@ final class ScheduledFutureTask<V> extends PromiseTask<V> implements ScheduledFu
     }
 
     private final long id = nextTaskId.getAndIncrement();
-    private long deadlineNanos;
+    private long deadlineNanos; // 首次迟执行的时间 initialDelay
     /* 0 - no repeat, >0 - repeat at fixed rate, <0 - repeat with fixed delay */
-    private final long periodNanos;
+    private final long periodNanos;// 间隔时间
 
     ScheduledFutureTask(
             AbstractScheduledEventExecutor executor,
@@ -115,7 +123,7 @@ final class ScheduledFutureTask<V> extends PromiseTask<V> implements ScheduledFu
     public void run() {
         assert executor().inEventLoop();
         try {
-            if (periodNanos == 0) {
+            if (periodNanos == 0) { // 间隔时间是0，立即执行task 并且保存结果
                 if (setUncancellableInternal()) {
                     V result = task.call();
                     setSuccessInternal(result);

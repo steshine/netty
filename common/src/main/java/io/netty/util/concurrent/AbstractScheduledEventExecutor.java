@@ -26,10 +26,11 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Abstract base class for {@link EventExecutor}s that want to support scheduling.
+ * 这一层抽象类，实现了各种的schedule 方法
  */
 public abstract class AbstractScheduledEventExecutor extends AbstractEventExecutor {
 
-    Queue<ScheduledFutureTask<?>> scheduledTaskQueue;
+    Queue<ScheduledFutureTask<?>> scheduledTaskQueue; // 这个就是存延迟任务的队列了
 
     protected AbstractScheduledEventExecutor() {
     }
@@ -44,7 +45,7 @@ public abstract class AbstractScheduledEventExecutor extends AbstractEventExecut
 
     Queue<ScheduledFutureTask<?>> scheduledTaskQueue() {
         if (scheduledTaskQueue == null) {
-            scheduledTaskQueue = new PriorityQueue<ScheduledFutureTask<?>>();
+            scheduledTaskQueue = new PriorityQueue<ScheduledFutureTask<?>>(); // 此处创建一个优先队列，用来执行延迟任务用,在{@link SingleThreadEventExecutor} 可以看到用了(优先队列不保证线程安全)
         }
         return scheduledTaskQueue;
     }

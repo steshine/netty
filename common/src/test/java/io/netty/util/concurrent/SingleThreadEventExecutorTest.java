@@ -21,6 +21,27 @@ import org.junit.Test;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class SingleThreadEventExecutorTest {
+    @Test
+    public void testStartProcess() {
+        SingleThreadEventExecutor executor2 = new SingleThreadEventExecutor(null, new DefaultThreadFactory("test1"), false) {
+            @Override
+            protected void run() {
+                while (!confirmShutdown()) {
+                    System.out.println(Thread.currentThread().getName() + " .init run ");
+                }
+            }
+        };
+        executor2.execute(new Runnable() {
+            @Override
+            public void run() {
+
+                System.out.println(Thread.currentThread().getName() + " .executor run ");
+
+            }
+        });
+
+        executor2.shutdownGracefully();
+    }
 
     @Test
     public void testThreadProperties() {
@@ -29,6 +50,7 @@ public class SingleThreadEventExecutorTest {
                 null, new DefaultThreadFactory("test"), false) {
             @Override
             protected void run() {
+                System.out.println("current thread " + Thread.currentThread().getId());
                 threadRef.set(Thread.currentThread());
                 while (!confirmShutdown()) {
                     Runnable task = takeTask();
@@ -38,6 +60,7 @@ public class SingleThreadEventExecutorTest {
                 }
             }
         };
+
         ThreadProperties threadProperties = executor.threadProperties();
 
         Thread thread = threadRef.get();

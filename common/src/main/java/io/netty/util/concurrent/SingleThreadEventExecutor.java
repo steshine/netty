@@ -82,7 +82,7 @@ public abstract class SingleThreadEventExecutor extends AbstractScheduledEventEx
         }
         PROPERTIES_UPDATER = propertiesUpdater;
     }
-
+    // 存待处理任务的队列 默认实现是一个LinkedBlockQueue
     private final Queue<Runnable> taskQueue;
 
     private volatile Thread thread;
@@ -177,9 +177,11 @@ public abstract class SingleThreadEventExecutor extends AbstractScheduledEventEx
     /**
      * Take the next {@link Runnable} from the task queue and so will block if no task is currently present.
      * <p>
+     * 从队列中获取任务，队列为空是会一直阻塞
      * Be aware that this method will throw an {@link UnsupportedOperationException} if the task queue, which was
      * created via {@link #newTaskQueue()}, does not implement {@link BlockingQueue}.
      * </p>
+     * 如果实现不是BlockQueue 那就抛出异常，我jio着，这是为了保证阻塞
      *
      * @return {@code null} if the executor thread has been interrupted or waken up.
      */
@@ -191,12 +193,12 @@ public abstract class SingleThreadEventExecutor extends AbstractScheduledEventEx
 
         BlockingQueue<Runnable> taskQueue = (BlockingQueue<Runnable>) this.taskQueue;
         for (;;) {
-            ScheduledFutureTask<?> scheduledTask = peekScheduledTask();
+            ScheduledFutureTask<?> scheduledTask = peekScheduledTask(); // 从优先队列里拿出一个任务，没有从当前taskQueue 里拿,此处用peek保证不出空数据异常
             if (scheduledTask == null) {
                 Runnable task = null;
                 try {
-                    task = taskQueue.take();
-                    if (task == WAKEUP_TASK) {
+                    task = taskQueue.take();// 拿不到就一直等
+                    if (task == WAKEUP_TASK) { // 这个wake task 就是一个占位的家伙
                         task = null;
                     }
                 } catch (InterruptedException e) {
@@ -590,6 +592,7 @@ public abstract class SingleThreadEventExecutor extends AbstractScheduledEventEx
 
     /**
      * Confirm that the shutdown if the instance should be done now!
+     * 看名字只是一个确认关闭，其实是强制关闭，并且执行了hook
      */
     protected boolean confirmShutdown() {
         if (!isShuttingDown()) {
@@ -658,6 +661,11 @@ public abstract class SingleThreadEventExecutor extends AbstractScheduledEventEx
         return isTerminated();
     }
 
+    /**
+     *  在线程池中的执行task的方法
+     *  真实的情况是execute并没有真正执行task,而是把task放到队列里
+     * @param task
+     */
     @Override
     public void execute(Runnable task) {
         if (task == null) {
@@ -666,7 +674,7 @@ public abstract class SingleThreadEventExecutor extends AbstractScheduledEventEx
 
         boolean inEventLoop = inEventLoop();
         if (inEventLoop) {
-            addTask(task);
+            addTask(task); // taskQueue.add(task); 此处在taskQueue中加任务
         } else {
             startThread();
             addTask(task);
@@ -726,6 +734,9 @@ public abstract class SingleThreadEventExecutor extends AbstractScheduledEventEx
         }
     }
 
+    /**
+     * 线程启动方法
+     */
     private void doStartThread() {
         assert thread == null;
         executor.execute(new Runnable() {
@@ -739,7 +750,7 @@ public abstract class SingleThreadEventExecutor extends AbstractScheduledEventEx
                 boolean success = false;
                 updateLastExecutionTime();
                 try {
-                    SingleThreadEventExecutor.this.run();
+                    SingleThreadEventExecutor.this.run(); //启动任务时会直接运行run
                     success = true;
                 } catch (Throwable t) {
                     logger.warn("Unexpected exception from an event executor: ", t);
@@ -768,7 +779,7 @@ public abstract class SingleThreadEventExecutor extends AbstractScheduledEventEx
                         }
                     } finally {
                         try {
-                            cleanup();
+                            cleanup(); // 我猜这里就是hook程序了
                         } finally {
                             STATE_UPDATER.set(SingleThreadEventExecutor.this, ST_TERMINATED);
                             threadLock.release();
