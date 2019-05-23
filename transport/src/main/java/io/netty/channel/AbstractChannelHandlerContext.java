@@ -24,6 +24,9 @@ import io.netty.util.internal.StringUtil;
 
 import java.net.SocketAddress;
 
+/**
+ * ChannelHandlerContext 的抽象实现
+ */
 abstract class AbstractChannelHandlerContext implements ChannelHandlerContext, ResourceLeakHint {
 
     volatile AbstractChannelHandlerContext next;

@@ -37,6 +37,7 @@ import java.util.concurrent.RejectedExecutionException;
 
 /**
  * A skeletal {@link Channel} implementation.
+ * 一个主要实现
  */
 public abstract class AbstractChannel extends DefaultAttributeMap implements Channel {
 
@@ -49,21 +50,21 @@ public abstract class AbstractChannel extends DefaultAttributeMap implements Cha
         CLOSED_CHANNEL_EXCEPTION.setStackTrace(EmptyArrays.EMPTY_STACK_TRACE);
         NOT_YET_CONNECTED_EXCEPTION.setStackTrace(EmptyArrays.EMPTY_STACK_TRACE);
     }
-
-    private MessageSizeEstimator.Handle estimatorHandle;
+    // estimator 估计量；估计值；推算子；推算式；评价者
+    private MessageSizeEstimator.Handle estimatorHandle; // 计算消息大小的Handle
 
     private final Channel parent;
     private final ChannelId id;
     private final Unsafe unsafe;
-    private final ChannelPipeline pipeline;
+    private final ChannelPipeline pipeline; // 一个管道，在上面挂载inbound和outbound handle 用于处理请求
     private final ChannelFuture succeededFuture = new SucceededChannelFuture(this, null);
     private final VoidChannelPromise voidPromise = new VoidChannelPromise(this, true);
     private final VoidChannelPromise unsafeVoidPromise = new VoidChannelPromise(this, false);
     private final CloseFuture closeFuture = new CloseFuture(this);
 
-    private volatile SocketAddress localAddress;
-    private volatile SocketAddress remoteAddress;
-    private volatile EventLoop eventLoop;
+    private volatile SocketAddress localAddress; // 本地地址
+    private volatile SocketAddress remoteAddress; // 远程地址
+    private volatile EventLoop eventLoop; // 事件循环处理器、处理channel上的I/O 操作
     private volatile boolean registered;
 
     /** Cache for the string representation of this channel */

@@ -76,6 +76,8 @@ import java.net.SocketAddress;
  * It is important to call {@link #close()} or {@link #close(ChannelPromise)} to release all
  * resources once you are done with the {@link Channel}. This ensures all resources are
  * released in a proper way, i.e. filehandles.
+ *
+ * Channel 一个Channel就是一个连接 ，可以读写、绑定端口、连接
  */
 public interface Channel extends AttributeMap, Comparable<Channel> {
 

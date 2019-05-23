@@ -28,6 +28,9 @@ import java.net.SocketAddress;
 import static io.netty.channel.ChannelHandlerInvokerUtil.*;
 import static io.netty.channel.DefaultChannelPipeline.*;
 
+/**
+ * 提供默认的handlerInvoke
+ */
 public class DefaultChannelHandlerInvoker implements ChannelHandlerInvoker {
 
     private final EventExecutor executor;

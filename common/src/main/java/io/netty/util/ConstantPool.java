@@ -25,6 +25,8 @@ import java.util.Map;
  * A pool of {@link Constant}s.
  *
  * @param <T> the type of the constant
+ *
+ * 一个实例pool ，如果存在同名的，就update 底层map实现
  */
 public abstract class ConstantPool<T extends Constant<T>> {
 

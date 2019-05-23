@@ -22,6 +22,7 @@ import io.netty.util.concurrent.EventExecutor;
  *
  * One {@link EventLoop} instance will usually handle more than one {@link Channel} but this may depend on
  * implementation details and internals.
+ *  处理所有的注册到Channel上的IO操,一个EventLoop 实例通常处理多个channel
  *
  */
 public interface EventLoop extends EventExecutor, EventLoopGroup {

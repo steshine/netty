@@ -42,11 +42,12 @@ import java.util.concurrent.Future;
 /**
  * The default {@link ChannelPipeline} implementation.  It is usually created
  * by a {@link Channel} implementation when the {@link Channel} is created.
+ * 默认实现，在Channel创建时创建 主要是提供了对pipeLine上handler的增删改，每个Channel对应一个ChannelPipeLine
  */
 final class DefaultChannelPipeline implements ChannelPipeline {
 
     static final InternalLogger logger = InternalLoggerFactory.getInstance(DefaultChannelPipeline.class);
-
+    // 一个类似于ThreadLocal的实现
     private static final FastThreadLocal<Map<Class<?>, String>> nameCaches =
             new FastThreadLocal<Map<Class<?>, String>>() {
         @Override
@@ -59,11 +60,11 @@ final class DefaultChannelPipeline implements ChannelPipeline {
 
     final AbstractChannelHandlerContext head;
     final AbstractChannelHandlerContext tail;
-
+    // 是否开启资源泄露探测器
     private final boolean touch = ResourceLeakDetector.isEnabled();
 
     /**
-     * @see #findInvoker(EventExecutorGroup)
+     * @see #findInvoker(EventExecutorGroup) 维护了一个Invoker和Executor的对应关系
      */
     private Map<EventExecutorGroup, ChannelHandlerInvoker> childInvokers;
 
@@ -327,9 +328,9 @@ final class DefaultChannelPipeline implements ChannelPipeline {
         if (invoker == null) {
             EventExecutor executor = group.next();
             if (executor instanceof EventLoop) {
-                invoker = ((EventLoop) executor).asInvoker();
+                invoker = ((EventLoop) executor).asInvoker();// 获取当前Executor 的 invoker对象
             } else {
-                invoker = new DefaultChannelHandlerInvoker(executor);
+                invoker = new DefaultChannelHandlerInvoker(executor);// 此处创建一个新的invoker 使用默认是实现
             }
             childInvokers.put(group, invoker);
         }

@@ -17,7 +17,7 @@ package io.netty.util.concurrent;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.RunnableFuture;
-
+//PromiseTask继承与DefaultPromise并且实现了RunnableFuture接口 you do
 class PromiseTask<V> extends DefaultPromise<V> implements RunnableFuture<V> {
 
     static <T> Callable<T> toCallable(Runnable runnable, T result) {

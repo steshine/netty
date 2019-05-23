@@ -38,7 +38,9 @@ final class ScheduledFutureTask<V> extends PromiseTask<V> implements ScheduledFu
     static long nanoTime() {
         return System.nanoTime() - START_TIME;
     }
-
+    //这里稍微有点绕，此处并不是使用具体的时间进行比较的而是使用时间段进行比较的，
+    // 比如开始时间是00:00:00而当前时间是00:00:01他们的时间段就是1s而下一次执行周期计算应该是2s如果这样比较那么此条件不成立则不执行，
+    // 直到当前时间00:00:02的时候才进行执行。而此方法就是获取下一次执行周期的计算结果。
     static long deadlineNanos(long delay) {
         return nanoTime() + delay;
     }

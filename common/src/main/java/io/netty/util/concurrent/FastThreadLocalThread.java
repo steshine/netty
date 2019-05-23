@@ -19,6 +19,7 @@ import io.netty.util.internal.InternalThreadLocalMap;
 
 /**
  * A special {@link Thread} that provides fast access to {@link FastThreadLocal} variables.
+ * 一个单独的实现
  */
 public class FastThreadLocalThread extends Thread {
 

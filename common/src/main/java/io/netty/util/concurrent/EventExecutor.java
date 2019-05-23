@@ -22,7 +22,7 @@ import java.util.Set;
  * with some handy methods to see if a {@link Thread} is executed in a event loop.
  * Besides this, it also extends the {@link EventExecutorGroup} to allow for a generic
  * way to access methods.
- *
+ * 类似线程池的东西
  */
 public interface EventExecutor extends EventExecutorGroup {
 
