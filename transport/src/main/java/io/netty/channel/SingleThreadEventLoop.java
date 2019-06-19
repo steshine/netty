@@ -64,7 +64,7 @@ public abstract class SingleThreadEventLoop extends SingleThreadEventExecutor im
         if (promise == null) {
             throw new NullPointerException("promise");
         }
-
+        // channel注册到selector
         channel.unsafe().register(this, promise);
         return promise;
     }

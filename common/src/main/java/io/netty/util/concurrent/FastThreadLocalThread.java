@@ -19,7 +19,7 @@ import io.netty.util.internal.InternalThreadLocalMap;
 
 /**
  * A special {@link Thread} that provides fast access to {@link FastThreadLocal} variables.
- * 一个单独的实现
+ * 一个单独的实现 NioEventLoopGroup 的executor 对象，使用的是这个实现，用过DefaultThreadFactory 的newThread 创建
  */
 public class FastThreadLocalThread extends Thread {
 

@@ -90,6 +90,9 @@ public abstract class AbstractNioByteChannel extends AbstractNioChannel {
             }
         }
 
+        /**
+         * 读取Channel中的数据
+         */
         @Override
         public final void read() {
             final ChannelConfig config = config();
@@ -109,8 +112,8 @@ public abstract class AbstractNioByteChannel extends AbstractNioChannel {
                 boolean needReadPendingReset = true;
                 do {
                     byteBuf = allocHandle.allocate(allocator);
-                    allocHandle.lastBytesRead(doReadBytes(byteBuf));
-                    if (allocHandle.lastBytesRead() <= 0) {
+                    allocHandle.lastBytesRead(doReadBytes(byteBuf));// doReadBytes() 方法是读取channel中的数据到ByteBuf
+                    if (allocHandle.lastBytesRead() <= 0) { // 读取到的数据小于0 ,意味着本次OP_READ 事件数据读取完毕,释放ByteBuf
                         // nothing was read. release the buffer.
                         byteBuf.release();
                         byteBuf = null;
@@ -122,7 +125,7 @@ public abstract class AbstractNioByteChannel extends AbstractNioChannel {
                         needReadPendingReset = false;
                         setReadPending(false);
                     }
-                    pipeline.fireChannelRead(byteBuf);
+                    pipeline.fireChannelRead(byteBuf);// 触发channelRead 事件
                     byteBuf = null;
                 } while (allocHandle.continueReading());
 

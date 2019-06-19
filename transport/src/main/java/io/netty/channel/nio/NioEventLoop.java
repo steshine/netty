@@ -122,6 +122,10 @@ public final class NioEventLoop extends SingleThreadEventLoop {
         selector = openSelector();
     }
 
+    /**
+     * 开启selector，创建selector对象，channel会注册到这上面
+     * @return
+     */
     private Selector openSelector() {
         final Selector selector;
         try {
@@ -135,6 +139,7 @@ public final class NioEventLoop extends SingleThreadEventLoop {
         }
 
         try {
+            // 反射的方式实例化SelectorImpl
             SelectedSelectionKeySet selectedKeySet = new SelectedSelectionKeySet();
 
             Class<?> selectorImplClass =
@@ -301,6 +306,9 @@ public final class NioEventLoop extends SingleThreadEventLoop {
         logger.info("Migrated " + nChannels + " channel(s) to the new Selector.");
     }
 
+    /**
+     * 监听客户端连接，交给selector
+     */
     @Override
     protected void run() {
         for (;;) {
@@ -509,8 +517,8 @@ public final class NioEventLoop extends SingleThreadEventLoop {
             int readyOps = k.readyOps();
             // Also check for readOps of 0 to workaround possible JDK bug which may otherwise lead
             // to a spin loop
-            if ((readyOps & (SelectionKey.OP_READ | SelectionKey.OP_ACCEPT)) != 0 || readyOps == 0) {
-                unsafe.read();
+            if ((readyOps & (SelectionKey.OP_READ | SelectionKey.OP_ACCEPT)) != 0 || readyOps == 0) {// selector监听到OP_Read 方法，读取数据
+                unsafe.read(); // 读取数据
                 if (!ch.isOpen()) {
                     // Connection already closed - no need to handle write.
                     return;

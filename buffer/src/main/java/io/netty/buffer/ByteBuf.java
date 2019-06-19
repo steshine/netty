@@ -1773,7 +1773,7 @@ public abstract class ByteBuf implements ReferenceCounted, Comparable<ByteBuf> {
      * Transfers the content of the specified channel to this buffer
      * starting at the current {@code writerIndex} and increases the
      * {@code writerIndex} by the number of the transferred bytes.
-     *
+     *  将制定channel中的内容转移到buffer中,从当前writeIndex读取length ,并且移动writeIndex
      * @param length the maximum number of bytes to transfer
      *
      * @return the actual number of bytes read in from the specified channel

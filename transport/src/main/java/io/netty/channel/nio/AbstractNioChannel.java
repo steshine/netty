@@ -46,7 +46,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Abstract base class for {@link Channel} implementations which use a Selector based approach.
  *
- * 非常重要的一个类，这里是NioChannel 的主要实现
+ * 非常重要的一个类，这里是NioChannel 的主要实现，register在这里
  */
 public abstract class AbstractNioChannel extends AbstractChannel {
 
@@ -59,7 +59,7 @@ public abstract class AbstractNioChannel extends AbstractChannel {
         CLOSED_CHANNEL_EXCEPTION.setStackTrace(EmptyArrays.EMPTY_STACK_TRACE);
     }
 
-    private final SelectableChannel ch;
+    private final SelectableChannel ch; // 这个是Jdk自带的Channel子类
     protected final int readInterestOp;
     volatile SelectionKey selectionKey;
     private volatile boolean inputShutdown;
@@ -335,7 +335,7 @@ public abstract class AbstractNioChannel extends AbstractChannel {
         boolean selected = false;
         for (;;) {
             try {
-                selectionKey = javaChannel().register(eventLoop().selector, 0, this);
+                selectionKey = javaChannel().register(eventLoop().selector, 0, this); // 真正的register方法，将channel注册到selector上
                 return;
             } catch (CancelledKeyException e) {
                 if (!selected) {

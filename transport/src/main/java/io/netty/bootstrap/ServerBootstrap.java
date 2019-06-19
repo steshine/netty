@@ -41,6 +41,9 @@ import java.util.concurrent.TimeUnit;
 /**
  * {@link Bootstrap} sub-class which allows easy bootstrap of {@link ServerChannel}
  *
+ *一个配置和启动类，netty各种启动项，handler啥的
+ * 提供了启动服务的方法
+ * 内部类用来处理添加Handler的逻辑
  */
 public class ServerBootstrap extends AbstractBootstrap<ServerBootstrap, ServerChannel> {
 
@@ -146,6 +149,11 @@ public class ServerBootstrap extends AbstractBootstrap<ServerBootstrap, ServerCh
         return childGroup;
     }
 
+    /**
+     * int的方法，这里借助ServerBootstrapAcceptor 包装一层,让Channel的pipeLine中的handler在channelRead 方法执行时，才添加到PileLine中
+     * @param channel
+     * @throws Exception
+     */
     @Override
     void init(Channel channel) throws Exception {
         final Map<ChannelOption<?>, Object> options = options();
@@ -212,6 +220,10 @@ public class ServerBootstrap extends AbstractBootstrap<ServerBootstrap, ServerCh
         return new Entry[size];
     }
 
+    /**
+     * 本身是一个Handler 在Channel 初始化时，作为一个Handler添加到PipeLine中
+     * ServerBootstrapAcceptor在channelRead事件触发的时候（也就有客户端连接的时候），把childHandler(用户自定义的Handler)加到childChannel Pipeline的末尾
+     */
     private static class ServerBootstrapAcceptor extends ChannelInboundHandlerAdapter {
 
         private final EventLoopGroup childGroup;
