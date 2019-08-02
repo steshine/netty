@@ -676,8 +676,8 @@ public abstract class SingleThreadEventExecutor extends AbstractScheduledEventEx
         if (inEventLoop) {
             addTask(task); // taskQueue.add(task); 此处在taskQueue中加任务
         } else {
-            startThread();
-            addTask(task);
+            startThread(); // 首次执行任务时，会走这个逻辑，启动线程
+            addTask(task);// 将当期任务放到任务队列里
             if (isShutdown() && removeTask(task)) {
                 reject();
             }
@@ -750,7 +750,7 @@ public abstract class SingleThreadEventExecutor extends AbstractScheduledEventEx
                 boolean success = false;
                 updateLastExecutionTime();
                 try {
-                    SingleThreadEventExecutor.this.run(); //启动任务时会直接运行run
+                    SingleThreadEventExecutor.this.run(); //启动任务时会直接运行run ,在run方法中会直接监听感兴趣事件（ops=16 ACCEPT ）,其实就是一直select
                     success = true;
                 } catch (Throwable t) {
                     logger.warn("Unexpected exception from an event executor: ", t);

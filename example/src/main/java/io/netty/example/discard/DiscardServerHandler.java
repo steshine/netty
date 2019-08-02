@@ -26,12 +26,44 @@ public class DiscardServerHandler extends SimpleChannelInboundHandler<Object> {
     @Override
     public void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
         // discard
+        System.out.println("channelRead0");
     }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         // Close the connection when an exception is raised.
+        System.out.println("exceptionCaught");
         cause.printStackTrace();
         ctx.close();
+    }
+
+    @Override
+    public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
+        super.channelRegistered(ctx);
+        System.out.println("channelRegistered");
+    }
+
+    @Override
+    public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
+        super.channelUnregistered(ctx);
+        System.out.println("channelUnregistered");
+    }
+
+    @Override
+    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+        super.channelActive(ctx);
+        System.out.println("channelActive");
+    }
+
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        super.channelInactive(ctx);
+        System.out.println("channelInactive");
+    }
+
+    @Override
+    public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
+        super.channelReadComplete(ctx);
+        System.out.println("channelReadComplete");
     }
 }

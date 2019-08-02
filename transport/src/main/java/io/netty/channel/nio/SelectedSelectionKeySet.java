@@ -20,6 +20,9 @@ import java.nio.channels.SelectionKey;
 import java.util.AbstractSet;
 import java.util.Iterator;
 
+/**
+ * 一个Set类，用来存放SelectionKey ，实现是数据，底层有两个AB数组，可以通过flip方法来选择使用哪个
+ */
 final class SelectedSelectionKeySet extends AbstractSet<SelectionKey> {
 
     private SelectionKey[] keysA;
