@@ -229,6 +229,8 @@ import java.nio.charset.UnsupportedCharsetException;
  *
  * Please refer to {@link ByteBufInputStream} and
  * {@link ByteBufOutputStream}.
+ *
+ * 由零个或多个字节（八位字节）组成的随机顺序可访问序列。此接口为一个或多个基元字节数组（byte[]）和NIO缓冲区提供抽象视图。
  */
 @SuppressWarnings("ClassMayBeInterface")
 public abstract class ByteBuf implements ReferenceCounted, Comparable<ByteBuf> {

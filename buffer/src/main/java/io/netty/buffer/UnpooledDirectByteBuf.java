@@ -30,6 +30,8 @@ import java.nio.channels.ScatteringByteChannel;
  * A NIO {@link ByteBuffer} based buffer.  It is recommended to use {@link Unpooled#directBuffer(int)}
  * and {@link Unpooled#wrappedBuffer(ByteBuffer)} instead of calling the
  * constructor explicitly.
+ *
+ * 一个基础类，底层存储实现是ByteBuffer
  */
 public class UnpooledDirectByteBuf extends AbstractReferenceCountedByteBuf {
 
