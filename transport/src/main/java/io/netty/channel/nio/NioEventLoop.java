@@ -505,6 +505,11 @@ public final class NioEventLoop extends SingleThreadEventLoop {
         }
     }
 
+    /**
+     * 读取数据的方法就在这了
+     * @param k
+     * @param ch
+     */
     private static void processSelectedKey(SelectionKey k, AbstractNioChannel ch) {
         final AbstractNioChannel.NioUnsafe unsafe = ch.unsafe();
         if (!k.isValid()) {
@@ -518,7 +523,7 @@ public final class NioEventLoop extends SingleThreadEventLoop {
             // Also check for readOps of 0 to workaround possible JDK bug which may otherwise lead
             // to a spin loop
             if ((readyOps & (SelectionKey.OP_READ | SelectionKey.OP_ACCEPT)) != 0 || readyOps == 0) {// selector监听到OP_Read 方法，读取数据
-                unsafe.read(); // 读取数据
+                unsafe.read(); // 读取数据，并触发channelRead事件
                 if (!ch.isOpen()) {
                     // Connection already closed - no need to handle write.
                     return;
