@@ -29,8 +29,8 @@ import java.net.SocketAddress;
  */
 abstract class AbstractChannelHandlerContext implements ChannelHandlerContext, ResourceLeakHint {
 
-    volatile AbstractChannelHandlerContext next;
-    volatile AbstractChannelHandlerContext prev;
+    volatile AbstractChannelHandlerContext next; // 当前ChannelHandlerContext的后一个ChannelHandlerContext
+    volatile AbstractChannelHandlerContext prev;// 当前ChannelHandlerContext的前一个ChannelHandlerContext
 
     private final boolean inbound;
     private final boolean outbound;
@@ -310,6 +310,10 @@ abstract class AbstractChannelHandlerContext implements ChannelHandlerContext, R
         return new FailedChannelFuture(channel(), executor(), cause);
     }
 
+    /**
+     * 一个比较重要的方法，用于找到类型是inBound的下一个ctx，逻辑就是一直next，一直到找到类型是inbound的返回
+     * @return
+     */
     private AbstractChannelHandlerContext findContextInbound() {
         AbstractChannelHandlerContext ctx = this;
         do {
@@ -318,6 +322,10 @@ abstract class AbstractChannelHandlerContext implements ChannelHandlerContext, R
         return ctx;
     }
 
+    /**
+     * 与上面的方法同理，只不过是往前找
+     * @return
+     */
     private AbstractChannelHandlerContext findContextOutbound() {
         AbstractChannelHandlerContext ctx = this;
         do {

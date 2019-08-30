@@ -123,6 +123,10 @@ import java.nio.channels.Channels;
  * {@link ChannelPipeline} to find out more about inbound and outbound operations,
  * what fundamental differences they have, how they flow in a  pipeline,  and how to handle
  * the operation in your application.
+ *
+ * 1.简单看这个接口，基本是个大杂烩，里面有InboundInvoke 和OutboundInvoke 的主要实现方法，也有channel和executor
+ * 2.作为连接ChannelHandler 和 ChannelPipeline 的桥梁角色出现，每一个ChannelHandler都对应一个ChannelHandlerContext
+ * 3.这样可以理解为什么此接口包裹了全部Inbound和Outbound 实现，因为需要兼容in out 两种场景，这么搞真的好么？
  */
 public interface ChannelHandlerContext extends AttributeMap {
 
